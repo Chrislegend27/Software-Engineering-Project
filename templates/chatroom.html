@@ -1,0 +1,48 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <link rel="stylesheet" href="./static/style.css"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Document</title>
+</head>
+<body>
+    <h1>Chatroom</h1>
+    <p>Welcome, {{ usr }}!</p>
+    <div class="MessageSend">
+        <form id="messageForm">
+            <input type="text" name="message"+ id="my_text">
+            <input type="button" value="Submit" id="btn1">
+        </form>
+    </div>
+
+    <div id="messages">
+        <p class="output" id="output1"></p>
+        
+    </div>
+    <script>
+        const txt1 = document.getElementById('my_text');
+        const btn1 = document.getElementById('btn1');
+        const out1 = document.getElementById('output1');
+        const username = "{{ usr }}"; // Get the username from Flask
+    
+        function addMessage() {
+            if (txt1.value.trim() !== '') {
+                out1.innerHTML += "<strong>" + username + "</strong>" + ": " +txt1.value + "<br><br>"; 
+                txt1.value = ''; // Clear the input field after sending the message
+            }
+        }
+        
+        btn1.addEventListener('click', addMessage);
+    
+        txt1.addEventListener('keypress', function(event) {
+            if (event.key === "Enter") {
+                event.preventDefault();
+                addMessage(); 
+            }
+        });
+    </script>
+    
+    
+</body>
+</html>
