@@ -1,7 +1,8 @@
 from flask import Flask, render_template, request, redirect, url_for
-import sys
+from flask_socketio import SocketIO, emit
 
 app = Flask(__name__)
+socketio = SocketIO(app)
 
 # Homepage
 @app.route("/", methods=["POST", "GET"])
@@ -13,12 +14,17 @@ def home():
     return render_template("index.html", usr=username)
 
 # Chatroom
-@app.route("/chatroom/<usr>", methods=["GET", "POST"])
+@app.route("/chatroom/<usr>", methods=["GET"])
 def chatroom(usr):
-    if request.method == "POST":
-        # Handle form submission here
-        pass
     return render_template("chatroom.html", usr=usr)
 
+@socketio.on('message')
+def handle_message(data):
+    username = data['username']
+    message = data['message']
+    # Emit the message to all clients, including the sender's username
+    emit('receive_message', {'username': username, 'message': message}, broadcast=True)
+
+
 if __name__ == "__main__":
-    app.run()
+    socketio.run(app, allow_unsafe_werkzeug=True)
