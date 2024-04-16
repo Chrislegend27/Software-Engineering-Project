@@ -1,24 +1,36 @@
-from flask import Flask, render_template, request, redirect, url_for
-import sys
+from flask import Flask, render_template, request, redirect, url_for # type: ignore
 
 app = Flask(__name__)
 
 # Homepage
 @app.route("/", methods=["POST", "GET"])
 def home():
-    username = None
     if request.method == "POST":
-        username = request.form["nm"]
-        return redirect(url_for("chatroom", usr=username))
-    return render_template("index.html", usr=username)
+        # Check if the signup button was clicked
+        if 'signup' in request.form:
+            return redirect(url_for("signup"))
+        
+        # Handle normal login submission
+        if 'nm' in request.form:
+            username = request.form["nm"]
+            return redirect(url_for("chatroom", usr=username))
+
+    return render_template("index.html")
 
 # Chatroom
 @app.route("/chatroom/<usr>", methods=["GET", "POST"])
 def chatroom(usr):
-    if request.method == "POST":
-        # Handle form submission here
-        pass
+    # Your chatroom logic
     return render_template("chatroom.html", usr=usr)
 
+# SignUp Page
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    # Handle normal login submission
+    if 'nm' in request.form:
+        username = request.form["nm"]
+        return redirect(url_for("chatroom", usr=username))
+    return render_template("signupPage.html")
+
 if __name__ == "__main__":
-    app.run()
+    app.run(debug=True)
