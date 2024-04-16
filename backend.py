@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, redirect, url_for # type: ignore
+from flask import Flask, render_template, request, redirect, url_for
 
 app = Flask(__name__)
 
@@ -33,4 +33,4 @@ def signup():
     return render_template("signupPage.html")
 
 if __name__ == "__main__":
-    app.run(debug=True)
+    app.run()
