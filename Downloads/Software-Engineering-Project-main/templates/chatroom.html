@@ -1,0 +1,83 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Chatroom</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        /* Basic styling to ensure visibility and layout */
+        body { 
+            font-family: Arial, sans-serif; 
+            margin: 0;
+            height: 100vh;
+            display: flex;
+            flex-direction: column;
+        }
+        #messages {
+            list-style-type: none; 
+            padding: 0;
+            flex-grow: 1;
+            overflow-y: auto;
+        }
+        li {
+            padding: 8px; 
+            margin-bottom: 2px; 
+            background-color: #f4f4f4; 
+            border-radius: 5px;
+        }
+        #messageForm {
+            display: flex;
+            margin: 10px;
+        }
+        input[type="text"] {
+            flex-grow: 1; 
+            padding: 10px; 
+            margin-right: 10px;
+        }
+        button {
+            padding: 10px;
+        }
+    </style>
+</head>
+<body>
+    <h1>Chatroom</h1>
+    <ul id="messages"></ul> <!-- Messages will be appended here -->
+    <div id="messageForm">
+        <input type="text" id="myMessage" placeholder="Type your message here...">
+        <button id="sendButton">Send</button> <!-- Clicking this sends the message -->
+    </div>
+
+    <script type="text/javascript">
+document.addEventListener('DOMContentLoaded', (event) => {
+    var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+    var sendMessage = function() {
+        var message = document.getElementById('myMessage').value;
+        var username = "{{ usr }}"; // Get the username passed from the server-side template
+        if(message) {
+            socket.emit('message', {username: username, message: message});
+            document.getElementById('myMessage').value = '';
+        }
+    };
+
+    // Trigger sendMessage when the send button is clicked
+    document.getElementById('sendButton').onclick = sendMessage;
+
+    // Trigger sendMessage when the enter key is pressed
+    document.getElementById('myMessage').addEventListener('keypress', function(e) {
+        if (e.key === 'Enter') {
+            sendMessage();
+        }
+    });
+
+    socket.on('receive_message', function(data) {
+        var item = document.createElement('li');
+        item.textContent = data.username + ": " + data.message; // Display username with message
+        document.getElementById('messages').appendChild(item);
+        window.scrollTo(0, document.body.scrollHeight);
+    });
+});
+
+    </script>
+</body>
+</html>
