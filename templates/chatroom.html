@@ -1,48 +1,43 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-    <link rel="stylesheet" href="./static/style.css"/>
     <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Document</title>
+    <title>Chatroom</title>
+    <script src="https://cdn.socket.io/4.0.0/socket.io.min.js"></script>
+    <style>
+        /* Basic styling to ensure visibility and layout */
+        body { font-family: Arial, sans-serif; padding: 20px; }
+        #messages { list-style-type: none; padding: 0; }
+        li { padding: 8px; margin-bottom: 2px; background-color: #f4f4f4; border-radius: 5px; }
+        input, button { padding: 10px; margin-top: 10px; }
+    </style>
 </head>
 <body>
     <h1>Chatroom</h1>
-    <p>Welcome, {{ usr }}!</p>
-    <div class="MessageSend">
-        <form id="messageForm">
-            <input type="text" name="message"+ id="my_text">
-            <input type="button" value="Submit" id="btn1">
-        </form>
-    </div>
+    <ul id="messages"></ul> <!-- Messages will be appended here -->
+    <input type="text" id="myMessage" placeholder="Type your message here...">
+    <button id="sendButton">Send</button> <!-- Clicking this sends the message -->
 
-    <div id="messages">
-        <p class="output" id="output1"></p>
-        
-    </div>
-    <script>
-        const txt1 = document.getElementById('my_text');
-        const btn1 = document.getElementById('btn1');
-        const out1 = document.getElementById('output1');
-        const username = "{{ usr }}"; // Get the username from Flask
-    
-        function addMessage() {
-            if (txt1.value.trim() !== '') {
-                out1.innerHTML += "<strong>" + username + "</strong>" + ": " +txt1.value + "<br><br>"; 
-                txt1.value = ''; // Clear the input field after sending the message
-            }
-        }
-        
-        btn1.addEventListener('click', addMessage);
-    
-        txt1.addEventListener('keypress', function(event) {
-            if (event.key === "Enter") {
-                event.preventDefault();
-                addMessage(); 
-            }
+    <script type="text/javascript">
+        document.addEventListener('DOMContentLoaded', (event) => {
+            var socket = io.connect(location.protocol + '//' + document.domain + ':' + location.port);
+
+            socket.on('connect', function() {
+                document.getElementById('sendButton').onclick = function() {
+                    var message = document.getElementById('myMessage').value;
+                    var username = "{{ usr }}";  // Get the username passed from the server-side template
+                    socket.emit('message', {username: username, message: message});
+                    document.getElementById('myMessage').value = '';
+                };
+            });
+
+            socket.on('receive_message', function(data) {
+                var item = document.createElement('li');
+                item.textContent = data.username + ": " + data.message;  // Display username with message
+                document.getElementById('messages').appendChild(item);
+                window.scrollTo(0, document.body.scrollHeight);
+            });
         });
     </script>
-    
-    
 </body>
 </html>
