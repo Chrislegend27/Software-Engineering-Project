@@ -7,11 +7,17 @@ socketio = SocketIO(app)
 # Homepage
 @app.route("/", methods=["POST", "GET"])
 def home():
-    username = None
     if request.method == "POST":
-        username = request.form["nm"]
-        return redirect(url_for("chatroom", usr=username))
-    return render_template("index.html", usr=username)
+        # Check if the signup button was clicked
+        if 'signup' in request.form:
+            return redirect(url_for("signup"))
+        
+        # Handle normal login submission
+        if 'nm' in request.form:
+            username = request.form["nm"]
+            return redirect(url_for("chatroom", usr=username))
+
+    return render_template("index.html")
 
 # Chatroom
 @app.route("/chatroom/<usr>", methods=["GET"])
@@ -25,6 +31,15 @@ def handle_message(data):
     # Emit the message to all clients, including the sender's username
     emit('receive_message', {'username': username, 'message': message}, broadcast=True)
 
+
+# SignUp Page
+@app.route("/signup", methods=["GET", "POST"])
+def signup():
+    # Handle normal login submission
+    if 'nm' in request.form:
+        username = request.form["nm"]
+        return redirect(url_for("chatroom", usr=username))
+    return render_template("signupPage.html")
 
 if __name__ == "__main__":
     socketio.run(app, allow_unsafe_werkzeug=True)
