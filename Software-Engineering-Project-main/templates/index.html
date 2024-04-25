@@ -1,0 +1,119 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>TigerChatter</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+@import url('https://fonts.googleapis.com/css2?family=Roboto:wght@400;500;700&display=swap');
+
+body {
+    background: linear-gradient(270deg, #007bff, #004085, #007bff, #1e3c72);
+    background-size: 800% 800%;
+    animation: GradientShift 15s ease infinite;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    height: 100vh;
+    font-family: 'Roboto', sans-serif;
+}
+
+.login-container {
+    box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+    background: #FFFFFF;
+    padding: 12px;
+    border-radius: 10px;
+    max-width: 600px;
+    width: 100%;
+}
+
+.logo-circle {
+    border-radius: 50%;
+    padding: 5px;
+    background: #FFFFFF;
+    border: 2px solid #D3D3D3;
+    display: flex;
+    justify-content: center;
+}
+
+.login-container h1 {
+    font-size: 25px;
+    font-weight: bold;
+    margin-bottom: 8px;
+    text-align: center;
+}
+
+input[type="text"],
+input[type="password"] {
+    appearance: none;
+    border: 1px solid #d3d3d3;
+    border-radius: 4px;
+    width: 100%;
+    padding: 8px 15px;
+    color: #333;
+    font-size: 16px;
+    background: #fff;
+    box-shadow: 0 2px 3px rgba(0, 0, 0, 0.1) inset;
+    outline: none;
+    transition: box-shadow 0.3s ease-in-out;
+}
+
+input[type="text"]:focus,
+input[type="password"]:focus {
+    box-shadow: 0 2px 4px rgba(0, 123, 255, 0.25) inset;
+}
+
+button {
+    background-color: #007bff;
+    color: white;
+    padding: 8px 16px;
+    border: none;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.6s ease;
+}
+
+button:hover {
+    background-color: #0056b3;
+}
+
+@keyframes GradientShift {
+    0% {
+        background-position: 0% 50%;
+    }
+    50% {
+        background-position: 100% 50%;
+    }
+    100% {
+        background-position: 0% 50%;
+    }
+}
+
+    </style>
+</head>
+<body class="bg-gray-100 flex items-center justify-center h-screen">
+    <div class="login-container bg-white p-12 rounded-lg max-w-lg mx-auto">
+        <form action="/" method="post"> <!-- Ensure action points to the correct Flask route -->
+            <div class="flex justify-center mb-8">
+                <div class="logo-circle">
+                    <img src="../static/logo.png" alt="TigerChatter logo placeholder image depicting a stylized tiger's head." width="100px" height="50px"/>
+                </div>
+            </div>
+            <h1 class="text-4xl font-bold mb-8 text-center">Welcome to Tiger Chatter</h1>
+            <div class="mb-4">
+                <label for="username" class="block text-gray-700 text-sm font-bold mb-2">Username</label>
+                <input type="text" id="username" name="nm" placeholder="Enter your username" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="mb-6">
+                <label for="password" class="block text-gray-700 text-sm font-bold mb-2">Password</label>
+                <input type="password" id="password" name="pswd" placeholder="Enter your password" class="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 mb-3 leading-tight focus:outline-none focus:shadow-outline" />
+            </div>
+            <div class="flex items-center justify-between">
+                <button class="bg-blue-500 hover:bg-blue-700 text-white font-bold py-2 px-4 rounded focus:outline-none focus:shadow-outline" type="submit">Login</button>
+                <button class="inline-block align-baseline font-bold text-sm text-blue-500 hover:text-blue-800" type="submit" name="signup">Create Account</button>
+            </div>
+        </form>
+    </div>
+</body>
+</html>
